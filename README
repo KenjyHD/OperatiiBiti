@@ -1,0 +1,269 @@
+Se cere implementarea unor functii ce au ca scop prelucrarea numaerelor 
+intregi folosindu-ne de operatii pe biti.
+
+1.	Bit & Pieces
+
+        Cerinta
+
+Se cere implementarea unui Ripple Carry Adder prin implementarea unor functii 
+mai simple. 
+get_bit - returneaza bit de pe pozitia data parametru a numnarului
+
+flip_bit - modifica valoarea bitului de pe pozitia data parametru din 
+numarul dat parametru; returneaza numarul modificat
+
+activate_bit - egaleaza bitul de pe pozititia respectiva cu 1; returneaza 
+numarul cu valoarea modificata
+
+clear_bit - egaleaza bitul de pe pozititia respectiva cu 0; returneaza 
+numarul cu valoarea modificata
+
+###_gate - implementarea functionalului operatiilor and, not, or, xor 
+folosind doar portile nand definite in gates.h
+
+full_adder - primeste parametru 3 biti si le sumeaza returnand 2 biti, 1 bit 
+de suma si 1 bit de carry
+
+ripple_carry_adder - implementarea sumatorului pe biti intre 2 numere date 
+parametru, returneaza rezultatul sumei
+
+1.1	    get_bit
+Am luat o masca prin shiftarea numarului 1 de i ori la stanga pentru al aduce
+la nivelul bitului pe care trb sal controlez. Dupa asta am facut operatia de &
+pe biti pentru a obtine valoarea mastii daca bitul e unu,
+valoare 0 in caz contrar.
+Apoi shiftez inapoi valoarea obtinuta de i ori.
+
+1.2	    flip_bit
+Operatia de schimbare a unui bit este xor cu numarul 1
+Astfel am shftat numarul 1 de i ori la stanga si facut operatia xor
+intre nr si masca obtinuta dupa shiftare
+Operatia de xor cu 0 nu schimba valoare primului
+0^0=0
+1^0=1
+
+1.3	    activate_bit
+Pentru activa al i-lea bit am facut operatia pe bit or intre numarul dat
+si masca(1 shiftat de i ori la stanga)
+
+1.4	    clear_bit
+Pentru a pastra valoarea celolalti biti si al zerografia pe al i-lea
+vom face o masca prin shiftarea numarului 1 de i ori la stanga
+dupa care vom face operatia de negare de biti.
+Acum operatia de si pe biti va avea rezultat valoarea numarului cu al i-lea 
+bit 0.
+
+1.5	    and_gate
+Am implementat comform schemei
+
+1.6	not_gate
+Am implementat comform schemei
+
+1.7	    or_gate
+Am implementat comform schemei
+
+1.8	    xor_gate
+Am implementat comform schemei
+
+1.9	    full_adder
+Pentru a obtine valoarea sumei am luat in considerare tabelul de adevar, 
+am facut diagrama Karnaugh dupa care am dedus formula pentru s.
+Analogic am facut si pentru restul c.
+S si c le-am codat in res astfel incat pt:
+s=0 c=0 res=0
+s=0 c=1 res=1
+s=1 c=0 res=2
+s=1 c=1 res=3
+
+1.10	ripple_carry_adder
+Am facut un ciclu pt a aplica functia full_adder pentru fiecare 2 biti
+din a si respectiv b.
+Dupa aplicarea functiei full_adder am calculat restul carry pentru al folosi 
+la urmatoarea functie full_adder. Restul carry are initial valoarea 0.
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+2.	Shut up Morty!
+
+        Cerinta
+
+Se cere implementarea functiilor urmatoarea:
+
+send_byte_message - trimite codificarea caracterelor R, I, C, K 
+folosind fonctia send_squanch definita in communication.h
+(literele in cazul task-ului sunt codificate de la 1 pina la 26 unde 
+1 este A, 2 este B, …, 26 este Z)
+
+recv_byte_message - apeleaza de 5 ori functia recv_squanch definita in 
+communication.h(aceasta returneaza numarul de cod al unui caracter, 
+la fiecare apelare returneaza un cod diferit), afisand la stdout caracterul 
+corespunzator codului respectiv.
+
+comm_byte - foloseste de 10 ori recv_squanch pentru a primi encodarea pt 
+caractere si trimite de 2 ori encodarea la fiecare caracter folosind 
+functia send_squanch.
+
+send_message - trimite mesajul HELLOTHERE folosind functia send_squanch.
+Trimite mai intai lungimea cuvantului si dupa encodarea pt fiecare caracter.
+
+recv_message - foloseste functia recv_squanch pentru a primi si a printa un 
+mesaj. Primul numar primit reprezinta lungiamea mesajului, dupa care urmeaza 
+encodarea mesajul propriu zis.
+
+comm_message - primeste un mesaj(mai intai lungimea dupa care encodarea 
+mesajului) si in dependenta daca ultima litera e P atunci va trimite mesajul 
+PICKLERICK, altfel mesajul VINDICATORS(lungimea si apoi mesajul)
+
+send_squanch2 - combina cele 2 numere-encodari a caracterelor formand 
+un numar-encodare nou. Returneaza numarul format. Combinarea codificarilor are 
+loc comform schemei din pdf, punctul 2.3.
+
+decode_squanch2 - functia decodeaza caracterul in modul descris in pdf, punctul 
+2.3.
+
+2.1	    send_byte_message
+Am trimis codul respectiv al fiecarei litere.
+
+2.2	    recv_byte_message
+Stiu ca in ascii codul literelor majuscule cu 65
+Respectiv diferenta intre codul ascii a lui A si codul din problema este 
+65-1=64
+
+2.3	    comm_byte
+Analizand functia send_squanch am inteles ca de fiecare data cand apelam 
+functia valoarea va fi imediat urmatoarea
+(apeland functia se incrementeaza indexul i). De aceea pentru a trimite
+mesajul de 2 ori dupa ce putem sal primim doar odata am creat o variabila
+auxiliara care sa memoreze mesajul si apoi o folosesc pentru al trimite
+pe acesta de 2 ori.
+
+2.4	    send_message
+Intrucat valoarea lungimi trebuie sa se afle pe locul
+2,3,4 si 5 am shiftat lungimea cuvantului(10) de 2 ori la stanga.
+In continuare am scazut din codul ascii a fiecarei litere 64 intrucat
+distanta dintre codificarea noastra si codificarea ascii a literelor majuscule
+este 64
+A la noi are codul 1
+A in ascii are codul 65
+
+2.5	    recv_message
+Pimind lungimea trebuie sa scap de cei 2 biti din stanga
+(a caror valoare nu trb sa luam in consideraie) 
+pentru a nu ne schimba valoarea variabilei length dupa ce
+aducem cei 4 biti pe primele 4 locuri(prin shiftare).
+De aceea mai intai shiftam valoarea de 2 ori la stanga
+si intrucat lucram pe 8 biti valoarea anterioara a bitilor care
+au iesit din octet se va uita.
+Dupa aduc bitii necesari pe primele 4 locuri.
+
+2.6	    comm_message
+Ca sa aflam ultima valoare a mesajului aflu mai intai lungimea
+Dupa apelez functia de length ori si memorez valoarea caracterului primit
+intro variabila auxiliara
+Acum trb doar sa controlez daca ultimul caracter e 'P' sau nu 
+si sa trimit mesajul respectiv.
+
+2.7	    send_squanch2
+Aflu valoarea bitului 3 prin operatia de AND pe biti intre c1 sau c2 si 
+respectiv 1 shiftat de 3 ori.Apoi doar aduc valoarea acestuia pe locul sau
+comform schemei.Si fac suma intre bitii adusi fiecare pe locul sau.
+
+2.8	    decode_squanch2
+Analogic algoritmului functiei send_squanch2.
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+3	Toss a coin to ur Witcher
+
+        Cerinta
+
+find_spell - primeste parametru un numar pe 64 biti si gaseste in acesta 16 
+biti ce urmeaza imediat dupa 5 biti de 1 consecutivi. Returneaza cei 16 biti 
+ca numar uint_16.
+
+find_key - analogic functiei anterioare, returneaza cei 16 biti ce se afla \
+imediat inainte de 3 bit de 1 consecutivi.
+
+decrypt_spell - avand la dispozitite formula 
+spell_encrypted = spell_plaintext ^ key si variabilele spell_encrypted si key 
+calculeaza si returneaza valoarea lui spell_plaintext.
+
+choose_sword - primeste parametru un numar enemy, in dependenta de paritatea 
+numarului de biti activi se determina tipul inamicului.In dependenta de tip 
+se va calcula variabila value. Comform formulelor din TODO-ul din task se va 
+forma un numar pe 64 biti care va reprezenta "sabia" aleasa.
+
+trial_of_the_grasses - generea un numar ce satisface conditiile formulelor 
+din TODO-ul task-ului. Primeste parametru int-ul cocktail.
+
+trial_of_forrest_eyes - returneaza numarul ce reprezinta "padurea" in care ne 
+aflam in dependenta de variabila map primita parametru. Determinarea tipului 
+padurii e descrisa in TODO-ul task-ului
+
+trial_of_the_dreams - returneaza distanta intre 2 biti de 1 dintr-un numar 
+primit paramteru(care are doar 2 biti de 1)
+
+3.1	    find_spell
+Folosesc variabila auxiliara c pentru a tine cont de citi biti activi
+consecutivi am.
+Daca gasesc 5 biti consecutivi opresc ciclul si shiftez de i+1 ori la dreapta
+memory-ul si scap de bitii care pot afecta valoarea prin operatia de si pe 
+biti cu o masca care are valoarea egala cu maximumul pe 16 biti.
+
+3.2	    find_key
+Analogic functiei anterioare gasesc 3 biti activi consecutivi dupa care
+shiftez i-18 ori la dreapta memory-ul, i fiind pozitia celui de-al 3 lea 
+bit activ consecutiv.Controlez cu maximumul pe 16 biti(si pe biti).
+
+3.3	    decrypt_spell
+Analizand operatia xor in mai multe directii am inteles ca ea este reversibila
+
+3.4	    choose_sword
+Mai intai parcurgem enemy-ul pt a afla numarul de biti actvi
+(variabila c va memora numaru de biti activi)
+Daca numarul de biti activi e par(restul impartirii la 2 e 0) atunci 
+punem type-ul pt monster pe ultimii 4 biti si calculam value comform formulei
+date pt monster, altfel type-ul pt human si respectiv value-ul pt human.
+
+3.5	    trial_of_the_grasses
+Din antibodies_low & antibodies_high = 0 si 
+antibodies_low | antibodies_high = cocktail rezulta ca pt un bit din cocktail
+egal 1 atunci sau bitul adiacent din antibodies_high este 1 sau
+bitul adiacent din antibodies_low este 1.
+Din concluzia anterioara si 
+(antibodies_high & cocktail) ^ (antibodies_low | cocktail) =0
+rezulta ca pt un bit din cocktail egal cu 1 atunci 
+bitul adiacent din antibodies_high va fi 1 iar
+bitul adiacent din antibodies_low va fi 0; iar pt un bit din cocktail
+egal cu 0 adunci ambii biti adiacenti din antibodies_high si 
+antibodies_low vor fi 0;
+Deci antibodies_high=cocktail, iar antibodies_low=0;
+
+3.6	    trial_of_forrest_eyes
+Pentru padurea Brokilon iau o variabila care sa fie 1 daca e Brokilon si 0 
+daca 0. O initializez cu 1 presupunand ca e brokilon. Dupa parcurg map si vad
+daca exista un numar de biti activi consecutivi diferit de 4(si de 0).
+Daca gasesc atunci cu siguranta nu este brokilon.
+Pentru padurea Wolven Glade controlez cati biti activi sunt pe harta.
+Daca sunt 64 biti activi atunci e Wolven Glade, altfel nu e.
+Pentru padurea Hindar controlez daca pe pozitiile 31 si 32 bitii sunt activi
+si daca numarul de biti activi din map este 2.Daca da atunci e Hindar.
+La inceput am initializat variabila res cu indexul pt Caed Dhu presupunand
+ca aceasta e padurea. Daca nu se dovedeste ca e alta padure atunci padurea
+este Caed Dhu.
+
+3.7	    trial_of_the_dreams
+Parcurgem map si daca gasim un bit 1 atunci scadem din pozitia lui valoarea
+res care am initializato cu 0.
+Cand va gasi urmatoarul bit de 1 atunci se va scade din indexul curent indexul
+ultimului bit de 1 gasit.
+Astfel distanta va fi indexul bitului activ din stanga minu indexul
+bitului activ din dreapta.
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+Drepturile de autor fata de crearea checkerului si conditiei apartin echipei de Programare a Calculatoarelor 2020
+Implementarea codului: Calmis Liviu
